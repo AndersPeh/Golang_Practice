@@ -2,7 +2,6 @@ package folder
 
 import (
 	"encoding/json"
-	"fmt"
 	"io"
 	"io/fs"
 	"os"
@@ -86,12 +85,6 @@ func generateTree(depth int, tree []Folder) []Folder {
 func MarshalJson(b interface{}) []byte {
 	s, _ := json.MarshalIndent(b, "", "\t")
 	return s
-}
-
-// PrettyPrint prints data in a pretty JSON format.
-func PrettyPrint(b interface{}) {
-	s := MarshalJson(b)
-	fmt.Println(string(s))
 }
 
 // GetSampleData reads folders from sample.json.
