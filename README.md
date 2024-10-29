@@ -1,19 +1,3 @@
-# sc-interns-2024
-
-The technical take home for 2024 internship applications.
-
-## Getting started
-
-Requires `Go` >= `1.23`
-
-follow the official install instruction: [Golang Installation](https://go.dev/doc/install)
-
-To run the code on your local machine
-
-```
-  go run main.go
-```
-
 ## Folder structure
 
 ```
@@ -309,20 +293,3 @@ Copy and paste the code snippet below into `main.go` and running `go run main.go
     folders.WriteSampleData(res)
   }
 ```
-
-## FAQ
-
-- Can I use external libraries?
-  - Yes, you can use external libraries.
-- Can I use a different programming language?
-  - No, you must use Go.
-- Can I use a different testing framework?
-  - Yes, you can use a different testing framework, be prepared to explain why you chose it.
-- Can I use a different data structure?
-  - Yes, you can use a different data structure.
-- Does the folder result in component 2 need to be sorted?
-  - No, the order of the folders does not matter.
-
-## Submission
-
-Create a repo in your chosen git repository (make sure it is public so we can access it) and reply with the link to your code. We recommend using GitHub.
