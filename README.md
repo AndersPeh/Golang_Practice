@@ -12,9 +12,6 @@
     | sample.json
 ```
 
-## Instructions
-
-- This technical assessment consists of 2 components:
 - Component 1:
 
   - within `get_folder.go`.
