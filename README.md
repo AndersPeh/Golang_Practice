@@ -1,4 +1,16 @@
-## Folder structure
+# Folder Management in Go
+
+## Overview
+
+This project provides a Go-based implementation for managing a hierarchical folder structure using `ltree`-like paths. It supports retrieving child folders and moving folders while maintaining the integrity of the structure. The project is designed to simulate a site directory and document organization system within a PostgreSQL-based platform.
+
+## Features
+
+- **Get All Child Folders**: Retrieve all child folders of a given folder within an organization.
+- **Move Folders**: Move a folder and its subtree from one parent to another while maintaining the correct path hierarchy.
+- **Error Handling**: Handles invalid folder paths, organization mismatches, and attempts to move a folder to an invalid location.
+
+## Folder Structure
 
 ```
 | go.mod
@@ -12,281 +24,81 @@
     | sample.json
 ```
 
-- Component 1:
+## Getting Started
 
-  - within `get_folder.go`.
-    - We would like you to read through, and run, the code.
-    - Implement `GetAllChildFolders` method in `get_folder.go` that returns all child folders of a given folder.
-    - Write up some unit tests in `get_folder_test.go` for all methods in `get_folder.go`.
+### 1. Clone the Repository
 
-- Component 2:
-  - within `move_folder.go`.
-    - Implement `MoveFolder` method in `move_folder.go` that moves a folder from one parent to another. (more details under component 2 section)
-    - Write up some unit tests in `move_folder_test.go` for the `MoveFolder` method.
-
-## Path Structure
-
-You are given a hierarchical tree where each node in the tree is represented by a path similar to `ltree` paths in PostgreSQL.
-
-The tree structure is represented as a series of paths, where each path is folder name separated by dots (e.g., `"alpha.bravo.charlie"`). Each name in the path represents a node, and the full path represents that node’s position in the hierarchy.
-
-we use `ltree` path for our site directory structure as well as our documents folder structure within the SC platform. This allow us to easily store and manipulate our folder structure using psql.
-
-## Component 1
-
-You will need to implement the following:
-
-1. A method to get all child folders of a given folder.
-2. The method should return a list of all child folders.
-3. Implement any necessary error handling (e.g. invalid orgID, invalid paths, etc).
-
-### Example Scenario
-
-```go
-folders := [
-  {
-    name: "alpha",
-    path: "alpha",
-    orgID: "org1",
-  },
-  {
-    name: "bravo",
-    path: "alpha.bravo",
-    orgID: "org1",
-  },
-  {
-    name: "charlie",
-    path : "alpha.bravo.charlie",
-    orgID: "org1",
-  },
-  {
-    name: "delta",
-    path: "alpha.delta",
-    orgID: "org1",
-  },
-  {
-    name: "echo",
-    path: "echo",
-    orgID: "org1",
-  },
-  {
-    name: "foxtrot",
-    path: "foxtrot",
-    orgID: "org2",
-  },
-]
-
-getAllChildFolders("org1", "alpha")
-// Expected output
-[
-   {
-    name: "bravo",
-    path: "alpha.bravo",
-    orgID: "org1",
-  },
-  {
-    name: "charlie",
-    path : "alpha.bravo.charlie",
-    orgID: "org1",
-  },
-  {
-    name: "delta",
-    path: "alpha.delta",
-    orgID: "org1",
-  },
-]
-
-getAllChildFolders("org1", "bravo")
-// Expected output
-[
-  {
-    name: "charlie",
-    path : "alpha.bravo.charlie",
-    orgID: "org1",
-  },
-]
-
-getAllChildFolders("org1", "charlie")
-// Expected output
-[]
-
-getAllChildFolders("org1", "echo")
-// Expected output
-[]
-
-getAllChildFolders("org1", "invalid_folder")
-// Error: Folder does not exist
-
-getAllChildFolders("org1", "foxtrot")
-// Error: Folder does not exist in the specified organization
+```sh
+git clone https://github.com/yourusername/your-repo.git
+cd your-repo
 ```
 
-## Component 2
+### 2. Run the Sample Data Generator
 
-You will need to implement the following:
+To generate sample data and test the implementation, run the following command:
 
-1. A method to move a subtree from one parent node to another, while maintaining the order of the children.
-2. The method should return the new folder structure once the move has occurred.
-3. Implement any necessary error handling (e.g. invalid paths, moving a node to a child of itself, moving folders to a different orgID, etc).
-4. There is no need to persist state, we can assume each method call will be independent of the previous one.
-
-### Example Scenario
-
-```go
-
-folders := [
-  {
-    name: "alpha",
-    path: "alpha",
-    orgID: "org1",
-  },
-  {
-    name: "bravo",
-    path: "alpha.bravo",
-    orgID: "org1",
-  },
-  {
-    name: "charlie",
-    path: "alpha.bravo.charlie",
-    orgID: "org1",
-  },
-  {
-    name: "delta",
-    path: "alpha.delta",
-    orgID: "org1",
-  },
-  {
-    name: "echo",
-    path: "alpha.delta.echo",
-    orgID: "org1",
-  },
-  {
-    name: "foxtrot",
-    path: "foxtrot",
-    orgID: "org2",
-  }
-  {
-    name: "golf",
-    path: "golf",
-    orgID: "org1",
-  }
-]
-
-moveFolder("bravo", "delta")
-// Expected output
-[
-  {
-    name: "alpha",
-    path: "alpha",
-    orgID: "org1",
-  },
-  {
-    name: "bravo",
-    path: "alpha.delta.bravo",
-    orgID: "org1",
-  },
-  {
-    name: "charlie",
-    path: "alpha.delta.bravo.charlie",
-    orgID: "org1",
-  },
-  {
-    name: "delta",
-    path: "alpha.delta",
-    orgID: "org1",
-  },
-  {
-    name: "echo",
-    path: "alpha.delta.echo",
-    orgID: "org1",
-  },
-  {
-    name: "foxtrot",
-    path: "foxtrot",
-    orgID: "org2",
-  }
-  {
-    name: "golf",
-    path: "golf",
-    orgID: "org1",
-  }
-]
-
-moveFolder("bravo", "golf")
-// Expected output
-[
-  {
-    name: "alpha",
-    path: "alpha",
-    orgID: "org1",
-  },
-  {
-    name: "bravo",
-    path: "golf.bravo",
-    orgID: "org1",
-  },
-  {
-    name: "charlie",
-    path: "golf.bravo.charlie",
-    orgID: "org1",
-  },
-  {
-    name: "delta",
-    path: "alpha.delta",
-    orgID: "org1",
-  },
-  {
-    name: "echo",
-    path: "alpha.delta.echo",
-    orgID: "org1",
-  },
-  {
-    name: "foxtrot",
-    pa th: "foxtrot",
-    orgID: "org2",
-  },
-  {
-    name: "golf",
-    path: "golf",
-    orgID: "org1",
-  }
-]
-
-moveFolder("bravo", "charlie")
-// Error: Cannot move a folder to a child of itself
-
-moveFolder("bravo", "bravo")
-// Error: Cannot move a folder to itself
-
-moveFolder("bravo", "foxtrot")
-// Error: Cannot move a folder to a different organization
-
-moveFolder("invalid_folder", "delta")
-// Error: Source folder does not exist
-
-moveFolder("bravo", "invalid_folder")
-// Error: Destination folder does not exist
-
+```sh
+go run main.go
 ```
 
-### Sample Data
+## Implementation Details
 
-a pre-populated `sample.json` file is provided for you to use as a sample data. You can use this data to test your implementation. You can also tweak the data to test different scenarios by changing the config within `static.go` and running the code.
+### Component 1: Get All Child Folders
 
-Copy and paste the code snippet below into `main.go` and running `go run main.go`.
+#### Function: `GetAllChildFolders(orgID string, folderName string) ([]Folder, error)`
+
+- Returns all child folders of a specified folder within an organization.
+- Ensures that the requested folder exists and belongs to the specified organization.
+- Uses an `ltree`-like path structure to determine hierarchical relationships.
+
+#### Example Usage
 
 ```go
-  package main
-
-  import (
-    "github.com/georgechieng-sc/interns-2022/folders"
-  )
-
-  func main() {
-    res := folders.GenerateData()
-
-    folders.PrettyPrint(res)
-
-    folders.WriteSampleData(res)
-  }
+folders := GetAllChildFolders("org1", "alpha")
 ```
+
+**Expected Output:**
+
+```json
+[
+  {"name": "bravo", "path": "alpha.bravo", "orgID": "org1"},
+  {"name": "charlie", "path": "alpha.bravo.charlie", "orgID": "org1"},
+  {"name": "delta", "path": "alpha.delta", "orgID": "org1"}
+]
+```
+
+### Component 2: Move Folders
+
+#### Function: `MoveFolder(source string, destination string) error`
+
+- Moves a folder and its entire subtree to a new parent folder.
+- Validates the source and destination folders.
+- Prevents moving a folder to itself or one of its children.
+- Ensures that folders remain within the same organization.
+
+#### Example Usage
+
+```go
+err := MoveFolder("bravo", "delta")
+```
+
+**Expected Output:**
+
+```json
+[
+  {"name": "alpha", "path": "alpha", "orgID": "org1"},
+  {"name": "bravo", "path": "alpha.delta.bravo", "orgID": "org1"},
+  {"name": "charlie", "path": "alpha.delta.bravo.charlie", "orgID": "org1"},
+  {"name": "delta", "path": "alpha.delta", "orgID": "org1"}
+]
+```
+
+## Running Tests
+
+To execute unit tests for `get_folder.go` and `move_folder.go`, run:
+
+```sh
+go test ./folder
+```
+
+##
